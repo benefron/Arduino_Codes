@@ -7,7 +7,7 @@
 
 // Declare the Servo pin
 int servoPin = 9;
-int resetPin = 46;
+int resetPin = 11;
 int linerPinFwd = 14;
 int linerPinBack = 15;
 // Create a servo object
