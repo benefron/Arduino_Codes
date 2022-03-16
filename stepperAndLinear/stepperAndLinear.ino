@@ -28,11 +28,13 @@ BasicStepperDriver linnear(MOTOR_STEPS, DIR_L, STEP_L,SLEEP_L);
 #define DIR 8
 #define STEP 9
 BasicStepperDriver stepper(MOTOR_STEPS, DIR, STEP,SLEEP);
-
+int randAr[6] = {1,2,3,1,2,3};
+int countAll = 0;
 
 
 //Uncomment line to use enable/disable functionality
 //BasicStepperDriver stepper(MOTOR_STEPS, DIR, STEP, SLEEP);
+
 
 void setup() {
   
@@ -58,7 +60,8 @@ void setup() {
 }
 
 void loop() {
-
+        
+  
   int mm = 0;
   char jj;
   int rot;
@@ -177,20 +180,24 @@ void loop() {
       
 if (digitalRead(11) == HIGH)
   {
-        int randAr[15] = {1,2,3,1,3,2,1,1,2,2,1,3,2,1,3};
-        for (int j =0;j<15;j++)
+        
+        randomSeed(micros() +  Serial.read());
+        for (int j =0;j<5;j++)
         {
-          int pos = random(15);
+          int pos = random(6);
           int t = randAr[j];
-          randAr[j];
+          randAr[j] = randAr[pos];
           randAr[pos] = t;
+          
           
         }
         
-        for (int i=0;i<15;i++)
+        for (int i=0;i<6;i++)
         {
+          
           int chRND = randAr[i];
-          Serial.println(chRND);
+          Serial.print(chRND);
+        
         switch (chRND){
         case 1:
         stepper.enable();
@@ -199,7 +206,7 @@ if (digitalRead(11) == HIGH)
         stepper.rotate(360-stepperAngle);
           stepper.rotate(60);
           stepperAngle = 60;
-          Serial.println("aluminum");
+          Serial.println(": aluminum");
           delay(1000);
           linnear.rotate(whiskPos);
 //          stepper.disable();
@@ -208,8 +215,9 @@ if (digitalRead(11) == HIGH)
           digitalWrite(2,HIGH);
           delay(100);
           digitalWrite(2,LOW);
-        i++;
+          countAll++;
         break;
+        
         
         
         
@@ -220,7 +228,7 @@ if (digitalRead(11) == HIGH)
           stepper.rotate(360-stepperAngle);
           stepper.rotate(120);
           stepperAngle = 120;
-          Serial.println("aluminum silenced");
+          Serial.println(": aluminum silenced");
           delay(1000);
           linnear.rotate(whiskPos);
 //          stepper.disable();
@@ -232,7 +240,7 @@ if (digitalRead(11) == HIGH)
           digitalWrite(2,HIGH);
           delay(100);
           digitalWrite(2,LOW);
-        i++;
+          countAll++;
         break;
         
         
@@ -243,7 +251,7 @@ if (digitalRead(11) == HIGH)
         linnear.rotate(-whiskPos);
         stepper.rotate(360-stepperAngle);
           stepperAngle = 0;
-          Serial.println("non");
+          Serial.println(": non");
           delay(1000);
           linnear.rotate(whiskPos);
 //          stepper.disable();
@@ -259,18 +267,15 @@ if (digitalRead(11) == HIGH)
           digitalWrite(2,HIGH);
           delay(100);
           digitalWrite(2,LOW);
-        i++;
+          countAll++;
         break;
         
         
       }
-      if (digitalRead(11) == LOW)
-      {
-        break;
-//        digitalWrite(resetPin,LOW);
-//        digitalWrite(11,LOW);
-      }
-      delay(60000);
+      Serial.print("countAll = ");
+      Serial.println(countAll);
+      
+      delay(30000);
   }
 
 }   
