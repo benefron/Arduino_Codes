@@ -4,10 +4,10 @@
 //#include <ezButton.h>
 
 #define MOTOR_STEPS 200
-#define RPM 60
+#define RPM 30
 #define RPM_L 300
-#define SLEEP_L 12
-#define SLEEP 7
+#define SLEEP_L 13
+#define SLEEP 2
 
 
 const byte interruptPin = 17;
@@ -20,13 +20,13 @@ int stepperAngle = 0;
 //int resetPin = 12; 
 
 #define DIR_L 15
-#define STEP_L 16
+#define STEP_L 14
 BasicStepperDriver linnear(MOTOR_STEPS, DIR_L, STEP_L,SLEEP_L);
 
-#define MICROSTEPS 4
+#define MICROSTEPS 1
 
-#define DIR 8
-#define STEP 9
+#define DIR 0
+#define STEP 1
 BasicStepperDriver stepper(MOTOR_STEPS, DIR, STEP,SLEEP);
 int randAr[6] = {1,2,3,1,2,3};
 int countAll = 0;
@@ -37,17 +37,19 @@ int countAll = 0;
 
 
 void setup() {
-  
+    
     linnear.begin(RPM_L, MICROSTEPS_L);
+    linnear.setEnableActiveState(LOW);
     stepper.begin(RPM, MICROSTEPS);
+    stepper.setEnableActiveState(LOW);
     // if using enable/disable on ENABLE pin (active LOW) instead of SLEEP uncomment next line
     // stepper.setEnableActiveState(LOW);
-    
-    Serial.begin(57600);
+    stepper.enable();
+    Serial.begin(115200);
     pinMode(interruptPin, INPUT_PULLUP);
     pinMode(11,INPUT_PULLDOWN);
     
-    pinMode(2,OUTPUT);
+    pinMode(3,OUTPUT);
     randomSeed(analogRead(0));
     while (! Serial); // Wait until Serial is ready - Leonardo
    
@@ -89,7 +91,7 @@ void loop() {
           Serial.print("Rotating stepper  ");
           Serial.println(rr);
           rot = rr.toInt();
-          stepper.move(rot*MICROSTEPS);
+          stepper.move(rot);
           stepperAngle = 0;
         }
       
@@ -106,71 +108,84 @@ void loop() {
            
         if (ch == 'l')
         {
-          stepper.enable();
+          
           linnear.enable();
           linnear.rotate(-whiskPos);
-          stepper.move(34*MICROSTEPS-stepperAngle);
-//          stepper.rotate(59.4);
-          stepperAngle = 34*MICROSTEPS;
+          stepper.move(-stepperAngle);
+          delay(100);
+          stepper.move(32*MICROSTEPS);
+          stepperAngle = 32*MICROSTEPS;
+//          stepper.rotate(-stepperAngle);
+//          delay(100);
+//          stepper.rotate(60);
+//          stepperAngle = 60;
           Serial.println("aluminum");
           delay(1000);
           linnear.rotate(whiskPos);
           linnear.disable();
 //          stepper.disable();
           delay(500);
-          digitalWrite(2,HIGH);
+          digitalWrite(3,HIGH);
           delay(100);
-          digitalWrite(2,LOW);
+          digitalWrite(3,LOW);
           
           
           
         }
         if (ch == 'm')
         {
-          stepper.enable();
+          
           linnear.enable();
           linnear.rotate(-whiskPos);
-          stepper.move(66*MICROSTEPS-stepperAngle);
-//          stepper.rotate(120.6);
-          stepperAngle = 66*MICROSTEPS;
+          
+          stepper.move(-stepperAngle);
+          delay(100);
+          stepper.move(64*MICROSTEPS);
+          stepperAngle = 64*MICROSTEPS;
+//          stepper.rotate(-stepperAngle);
+//          delay(100);
+//          stepper.rotate(120);
+//          stepperAngle = 120;
           Serial.println("aluminum silenced");
           delay(1000);
           linnear.rotate(whiskPos);
 //          stepper.disable();
           linnear.disable();
-          digitalWrite(2,HIGH);
+          digitalWrite(3,HIGH);
           delay(100);
-          digitalWrite(2,LOW);
+          digitalWrite(3,LOW);
           delay(100);
-          digitalWrite(2,HIGH);
+          digitalWrite(3,HIGH);
           delay(100);
-          digitalWrite(2,LOW);
+          digitalWrite(3,LOW);
          
           
         }
         if (ch == 'n')
         {
-          stepper.enable();
+          
           linnear.enable();
           linnear.rotate(-whiskPos);
-          stepper.move(0-stepperAngle);
+          stepper.move(-stepperAngle);
+          delay(100);
+          
           stepperAngle = 0;
           Serial.println("non");
           delay(1000);
           linnear.rotate(whiskPos);
 //          stepper.disable();
           linnear.disable();
-          digitalWrite(2,HIGH);
+          digitalWrite(3,HIGH);
           delay(100);
-          digitalWrite(2,LOW);
+          digitalWrite(3,LOW);
           delay(100);
-          digitalWrite(2,HIGH);
+          digitalWrite(3,HIGH);
           delay(100);
-          digitalWrite(2,LOW);
+          digitalWrite(3,LOW);
           delay(100);
-          digitalWrite(2,HIGH);
+          digitalWrite(3,HIGH);
           delay(100);
-          digitalWrite(2,LOW);
+          digitalWrite(3,LOW);
          
           
           
@@ -200,21 +215,22 @@ if (digitalRead(11) == HIGH)
         
         switch (chRND){
         case 1:
-        stepper.enable();
+        
           linnear.enable();
         linnear.rotate(-whiskPos);
-        stepper.rotate(360-stepperAngle);
-          stepper.rotate(60);
-          stepperAngle = 60;
+        stepper.move(-stepperAngle);
+          delay(100);
+          stepper.move(32*MICROSTEPS);
+          stepperAngle = 32*MICROSTEPS;
           Serial.println(": aluminum");
           delay(1000);
           linnear.rotate(whiskPos);
 //          stepper.disable();
           linnear.disable();
           delay(500);
-          digitalWrite(2,HIGH);
+          digitalWrite(3,HIGH);
           delay(100);
-          digitalWrite(2,LOW);
+          digitalWrite(3,LOW);
           countAll++;
         break;
         
@@ -222,51 +238,54 @@ if (digitalRead(11) == HIGH)
         
         
         case 2:
-        stepper.enable();
+        
           linnear.enable();
         linnear.rotate(-whiskPos);
-          stepper.rotate(360-stepperAngle);
-          stepper.rotate(120);
-          stepperAngle = 120;
+          stepper.move(-stepperAngle);
+          delay(100);
+          stepper.move(64*MICROSTEPS);
+          stepperAngle = 64*MICROSTEPS;
           Serial.println(": aluminum silenced");
           delay(1000);
           linnear.rotate(whiskPos);
 //          stepper.disable();
           linnear.disable();
-          digitalWrite(2,HIGH);
+          digitalWrite(3,HIGH);
           delay(100);
-          digitalWrite(2,LOW);
+          digitalWrite(3,LOW);
           delay(100);
-          digitalWrite(2,HIGH);
+          digitalWrite(3,HIGH);
           delay(100);
-          digitalWrite(2,LOW);
+          digitalWrite(3,LOW);
           countAll++;
         break;
         
         
         
         case 3:
-        stepper.enable();
+        
           linnear.enable();
         linnear.rotate(-whiskPos);
-        stepper.rotate(360-stepperAngle);
+        stepper.move(-stepperAngle);
+          delay(100);
+          
           stepperAngle = 0;
           Serial.println(": non");
           delay(1000);
           linnear.rotate(whiskPos);
 //          stepper.disable();
           linnear.disable();
-          digitalWrite(2,HIGH);
+          digitalWrite(3,HIGH);
           delay(100);
-          digitalWrite(2,LOW);
+          digitalWrite(3,LOW);
           delay(100);
-          digitalWrite(2,HIGH);
+          digitalWrite(3,HIGH);
           delay(100);
-          digitalWrite(2,LOW);
+          digitalWrite(3,LOW);
           delay(100);
-          digitalWrite(2,HIGH);
+          digitalWrite(3,HIGH);
           delay(100);
-          digitalWrite(2,LOW);
+          digitalWrite(3,LOW);
           countAll++;
         break;
         
